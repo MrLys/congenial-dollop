@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "budzilla.jwt.expiration",
+      "type": "java.lang.Long",
+      "description": "Description for budzilla.jwt.expiration."
+  }
+] }
