@@ -1,10 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
 	id("org.springframework.boot") version "3.0.0-SNAPSHOT"
 	id("io.spring.dependency-management") version "1.0.14.RELEASE"
 	kotlin("jvm") version "1.7.10"
 	kotlin("plugin.spring") version "1.7.10"
+	id("com.github.johnrengelman.shadow") version "5.1.0"
 }
 
 group = "com.budzilla"
@@ -34,7 +36,11 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
 }
-
+tasks.withType<ShadowJar>() {
+	manifest {
+		attributes["Main-Class"] = "HelloKt"
+	}
+}
 tasks.withType<KotlinCompile> {
 	kotlinOptions {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
