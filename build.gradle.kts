@@ -38,7 +38,7 @@ dependencies {
 }
 tasks.withType<ShadowJar>() {
 	manifest {
-		attributes["Main-Class"] = "HelloKt"
+		attributes["Main-Class"] = "BudzillaApplication"
 	}
 }
 tasks.withType<KotlinCompile> {
