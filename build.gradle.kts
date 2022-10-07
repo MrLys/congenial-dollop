@@ -18,12 +18,18 @@ repositories {
 	maven { url = uri("https://repo.spring.io/milestone") }
 	maven { url = uri("https://repo.spring.io/snapshot") }
 }
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.boot:spring-boot-dependencies:2.7.4")
+	}
+}
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
-	implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("org.springframework.boot:spring-boot-starter-data-mongodb:2.7.4")
+	implementation("org.springframework.boot:spring-boot-starter-security:2.7.4")
+	implementation("org.springframework.boot:spring-boot-starter-web:2.7.4")
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.0-rc1")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	// https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt-api
@@ -33,8 +39,8 @@ dependencies {
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
 
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testImplementation("org.springframework.security:spring-security-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-test:2.7.4")
+	testImplementation("org.springframework.security:spring-security-test:5.7.3")
 }
 tasks.withType<ShadowJar>() {
 	manifest {

@@ -1,8 +1,6 @@
 package com.budzilla.auth
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.HttpServletResponse
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
@@ -21,6 +19,8 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import java.sql.Timestamp
 import java.util.*
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 @Configuration
 @EnableWebSecurity
