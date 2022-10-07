@@ -1,19 +1,19 @@
 package com.budzilla.model
 
-import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.index.Indexed
-import org.springframework.data.mongodb.core.mapping.Document
+import javax.persistence.*
 
-@Document
-class Entry {
+
+@Entity
+class Entry (
     @Id
-    lateinit var id : String
-    @Indexed
-    lateinit var title : String
-    @Indexed
-    lateinit var body : String
-    @Indexed
-    lateinit var parent : String
-    @Indexed
-    lateinit var category : String
-}
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id : Long?=null,
+    @Column(length = 1024, unique = true)
+    var title : String,
+    @Column(length = 2048)
+    var body : String,
+    @Column(length = 1024)
+    var parent : String,
+    @Column(length = 1024)
+    var category : String,
+)

@@ -1,10 +1,8 @@
 package com.budzilla.auth
 
-import com.budzilla.model.User
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders.BASE64
-import io.jsonwebtoken.security.Keys
 import org.springframework.security.core.Authentication
 import org.springframework.stereotype.Service
 import java.lang.Exception
@@ -17,8 +15,8 @@ class JwtService(private val jwtConfiguration: JwtConfiguration) {
     private val key : SecretKey = SecretKeySpec(BASE64.decode(jwtConfiguration.jwtSecret), jwtConfiguration.format) //Keys.secretKeyFor(SignatureAlgorithm.HS512)
     private val parser  = Jwts.parserBuilder().setSigningKey(key).build()
     fun generate(auth : Authentication) : String {
-        val userPrincipal : User = auth.principal as User
-        return Jwts.builder().setSubject(userPrincipal.identity)
+        val userPrincipal = auth.principal as UserPrincipal
+        return Jwts.builder().setSubject(userPrincipal.user.identity)
             .setIssuedAt(Date())
             .setExpiration(getExpiryDateFromNow())
             .signWith(key, SignatureAlgorithm.HS512)
