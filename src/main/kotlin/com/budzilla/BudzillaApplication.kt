@@ -2,17 +2,18 @@ package com.budzilla
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
+import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.ComponentScan
-import org.springframework.context.annotation.ComponentScans
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 @SpringBootApplication
 @ComponentScan("com.budzilla.auth", "com.budzilla.controller", "com.budzilla")
-@EnableMongoRepositories("com.budzilla.data.repository")
+@EnableJpaRepositories(basePackages = ["com.budzilla.data.repository"])
 @EntityScan("com.budzilla.model")
+@EnableConfigurationProperties
 class BudzillaApplication
 
 fun main(args: Array<String>) {
-	runApplication<BudzillaApplication>(*args)
+	runApplication<BudzillaApplication>(*args, "--debug")
 }

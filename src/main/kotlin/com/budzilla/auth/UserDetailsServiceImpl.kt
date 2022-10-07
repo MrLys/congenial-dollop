@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserDetailsServiceImpl(
-    private val userRepository: UserRepository
+    val userRepository: UserRepository
 ) : UserDetailsService {
     override fun loadUserByUsername(username: String?): UserDetails {
         if (username == null) {
             throw UsernameNotFoundException("Username cannot be null")
         }
-        return userRepository.findByIdentity(username)
-            ?: throw UsernameNotFoundException("user for $username not found")
+        return UserPrincipal(userRepository.findByIdentity(username)
+            ?: throw UsernameNotFoundException("user for $username not found"))
     }
 }

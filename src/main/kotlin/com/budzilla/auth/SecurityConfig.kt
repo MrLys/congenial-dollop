@@ -55,7 +55,7 @@ class SecurityConfig(
         return BCryptPasswordEncoder()
     }
     @Bean
-    fun authManager(http : HttpSecurity, passwordEncoder : PasswordEncoder, userService : UserDetailsService) : AuthenticationManager {
+    fun authManager(http : HttpSecurity, passwordEncoder : PasswordEncoder, userService : UserDetailsServiceImpl) : AuthenticationManager {
         return http.getSharedObject(AuthenticationManagerBuilder::class.java)
             .userDetailsService(userService)
             .passwordEncoder(passwordEncoder)

@@ -23,7 +23,7 @@ class EntryController
         return ResponseEntity.ok().body(entry)
     }
     @PutMapping("/{id}")
-    fun update(@PathVariable id : String, @RequestBody dto : Entry) : ResponseEntity<Entry> {
+    fun update(@PathVariable id : Long, @RequestBody dto : Entry) : ResponseEntity<Entry> {
         val entry = entryRepository.findById(id)
         if (entry.isPresent) {
             dto.id = id
