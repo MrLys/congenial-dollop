@@ -54,3 +54,6 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+tasks.withType<Jar> {
+	archiveFileName.set("budzilla.jar")
+}
