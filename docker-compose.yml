@@ -10,6 +10,20 @@ services:
       - '6969:5432'
     volumes:
       - db:/var/lib/postgresql/data
+  web:
+    image: 628406611447.dkr.ecr.eu-north-1.amazonaws.com/budzilla:latest
+    ports:
+      - "16969:16969"
+    environment:
+      - SPRING_DATASOURCE_USERNAME=$BUDZILLA_USER
+      - SPRING_DATASOURCE_PASSWORD=$BUDZILLA_PASSWORD
+      - SERVER_PORT=16969
+      - spring.datasource.url=jdbc:postgresql://db:5432/budzilla
+    links:
+      - "db:database"
+    depends_on:
+      - db
+
 volumes:
   db:
     driver: local
