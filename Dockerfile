@@ -4,6 +4,7 @@ LABEL maintainer="dev@ljos.app"
 
 # The application's jar file
 ARG JAR_FILE=build/libs/budzilla.jar
+ARG JAVA_OPTS
 
 # Add the application's jar to the container
 ADD ${JAR_FILE} budzilla.jar
@@ -12,4 +13,4 @@ ADD ${JAR_FILE} budzilla.jar
 HEALTHCHECK CMD /usr/bin/find /tmp/budzilla.health -mmin -5 -type f | /bin/grep -q "/tmp/budzilla.health"
 
 # Run the jar file
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/budzilla.jar"]
+ENTRYPOINT exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /budzilla.jar
