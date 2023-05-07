@@ -6,8 +6,6 @@ services:
     environment:
       - POSTGRES_USER=$BUDZILLA_USER
       - POSTGRES_PASSWORD=$BUDZILLA_PASSWORD
-    ports:
-      - '6969:5432'
     volumes:
       - db:/var/lib/postgresql/data
   web:
@@ -17,8 +15,10 @@ services:
     environment:
       - SPRING_DATASOURCE_USERNAME=$BUDZILLA_USER
       - SPRING_DATASOURCE_PASSWORD=$BUDZILLA_PASSWORD
-      - SERVER_PORT=16969
-      - spring.datasource.url=jdbc:postgresql://db:5432/budzilla
+      - SERVER_PORT=$BUDZILLA_SERVER_PORT
+      - spring.datasource.url=$BUDZILLA_DATASOURCE_URL
+      - budzilla.jwt.secret=$BUDZILLA_JWT_SECRET
+      - budzilla.jwt.expiration=$BUDZILLA_JWT_expiration
     links:
       - "db:database"
     depends_on:
