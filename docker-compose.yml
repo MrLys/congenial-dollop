@@ -11,14 +11,14 @@ services:
   web:
     image: 628406611447.dkr.ecr.eu-north-1.amazonaws.com/budzilla:latest
     ports:
-      - "16969:16969"
+      - $BUDZILLA_SERVER_PORT:$BUDZILLA_SERVER_PORT
     environment:
       - SPRING_DATASOURCE_USERNAME=$BUDZILLA_USER
       - SPRING_DATASOURCE_PASSWORD=$BUDZILLA_PASSWORD
       - SERVER_PORT=$BUDZILLA_SERVER_PORT
       - spring.datasource.url=$BUDZILLA_DATASOURCE_URL
       - budzilla.jwt.secret=$BUDZILLA_JWT_SECRET
-      - budzilla.jwt.expiration=$BUDZILLA_JWT_expiration
+      - budzilla.jwt.expiration=$BUDZILLA_JWT_EXPIRATION
     links:
       - "db:database"
     depends_on:
