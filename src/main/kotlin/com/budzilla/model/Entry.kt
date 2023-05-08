@@ -10,7 +10,7 @@ class Entry (
     var id : Long?=null,
     @Column(length = 1024, unique = true)
     var title : String,
-    @Column(length = 2048)
+    @Column(length = 65535, columnDefinition = "TEXT")
     var body : String,
     @Column(length = 1024)
     var parent : String,
