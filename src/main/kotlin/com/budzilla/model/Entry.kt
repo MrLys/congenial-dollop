@@ -17,6 +17,6 @@ class Entry (
     @Column(length = 1024)
     var category : String,
     @ManyToOne
-    @JoinColumn(name = "ownerId", nullable = false)
+    @JoinColumn(name = "ownerid", nullable = false)
     var user: User
 )
