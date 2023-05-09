@@ -25,18 +25,6 @@ class UserController (
     val jwtService: JwtService
     ) {
 
-    @PostMapping("/signup")
-    fun signup(@RequestBody dto : UserDTO): ResponseEntity<Any> {
-        if (userRepository.existsByIdentity(dto.username)) {
-            return ResponseEntity
-                .badRequest()
-                .body("Error: Username is already in use")
-        }
-        val user = User(identity = dto.username, encodedPassword = passwordEncoder.encode(dto.password))
-        userRepository.save(user)
-        return ResponseEntity.noContent().build()
-    }
-
     @PostMapping("/login")
     fun login(@RequestBody dto : UserDTO) : ResponseEntity<JwtResponse> {
         val auth = authenticationManager.authenticate(
@@ -46,5 +34,13 @@ class UserController (
         val user = (auth.principal as UserPrincipal)
         val roles = user.authorities.map { i -> i.authority }
         return ResponseEntity.ok().body(JwtResponse(jwt, user.user.id!!, user.user.identity, roles))
+    }
+    @PostMapping("/update")
+    fun update(@RequestBody dto : UserDTO): ResponseEntity<Any> {
+        val auth = SecurityContextHolder.getContext().authentication
+        val user = (auth.principal as UserPrincipal).user
+        val updatedUser = User(user.id!!, dto.username, passwordEncoder.encode(dto.password))
+        userRepository.save(updatedUser)
+        return ResponseEntity.noContent().build()
     }
 }
