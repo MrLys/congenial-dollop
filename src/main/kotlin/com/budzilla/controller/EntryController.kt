@@ -1,9 +1,11 @@
 package com.budzilla.controller
 
+import com.budzilla.auth.UserPrincipal
 import com.budzilla.data.repository.EntryRepository
 import com.budzilla.model.Entry
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
 
@@ -19,6 +21,9 @@ class EntryController
     }
     @PostMapping
     fun create(@RequestBody entry : Entry) : ResponseEntity<Entry> {
+        val auth = SecurityContextHolder.getContext().authentication
+        val user = (auth.principal as UserPrincipal).user
+        entry.user = user
         entryRepository.save(entry)
         return ResponseEntity.ok().body(entry)
     }

@@ -16,4 +16,7 @@ class Entry (
     var parent : String,
     @Column(length = 1024)
     var category : String,
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    var user: User
 )
