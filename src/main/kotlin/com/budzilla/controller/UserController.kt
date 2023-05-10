@@ -6,6 +6,7 @@ import com.budzilla.auth.JwtService
 import com.budzilla.auth.UserPrincipal
 import com.budzilla.data.repository.UserRepository
 import com.budzilla.model.User
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.nio.file.AccessDeniedException
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,9 +24,25 @@ class UserController (
     val userRepository: UserRepository,
     val passwordEncoder: PasswordEncoder,
     val authenticationManager: AuthenticationManager,
-    val jwtService: JwtService
+    val jwtService: JwtService,
+    @Value("\${budzilla.signup.secret}")
+    val signupSecret : String
     ) {
 
+    @PostMapping("/signup")
+    fun signup(@RequestBody dto : UserDTO): ResponseEntity<Any> {
+        if (dto.secret == null || dto.secret != signupSecret) {
+            throw AccessDeniedException("Invalid secret");
+        }
+        if (userRepository.existsByIdentity(dto.username)) {
+            return ResponseEntity
+                .badRequest()
+                .body("Error: Username is already in use")
+        }
+        val user = User(identity = dto.username, encodedPassword = passwordEncoder.encode(dto.password))
+        userRepository.save(user)
+        return ResponseEntity.noContent().build()
+    }
     @PostMapping("/login")
     fun login(@RequestBody dto : UserDTO) : ResponseEntity<JwtResponse> {
         val auth = authenticationManager.authenticate(

@@ -1,0 +1,16 @@
+version: '3.3'
+services:
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=budzilla
+      - POSTGRES_PASSWORD=budzilla
+    volumes:
+      - db:/var/lib/postgresql/data
+    ports:
+      - 6969:5432
+
+volumes:
+  db:
+    driver: local

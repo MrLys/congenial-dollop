@@ -19,6 +19,7 @@ services:
       - spring.datasource.url=$BUDZILLA_DATASOURCE_URL
       - budzilla.jwt.secret=$BUDZILLA_JWT_SECRET
       - budzilla.jwt.expiration=$BUDZILLA_JWT_EXPIRATION
+      - budzilla.signup.secret=$BUDZILLA_SIGNUP_SECRET
     links:
       - "db:database"
     depends_on:
