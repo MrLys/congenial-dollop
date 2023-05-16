@@ -20,6 +20,7 @@ services:
       - budzilla.jwt.secret=$BUDZILLA_JWT_SECRET
       - budzilla.jwt.expiration=$BUDZILLA_JWT_EXPIRATION
       - budzilla.signup.secret=$BUDZILLA_SIGNUP_SECRET
+      - budzilla.cors.allowed_origins=$BUDZILLA_ALLOWED_ORIGINS
     links:
       - "db:database"
     depends_on:
