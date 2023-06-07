@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 
 interface EntryRepository : JpaRepository<Entry, Long> {
+    fun findByUserId(userId: Long): List<Entry>
 }

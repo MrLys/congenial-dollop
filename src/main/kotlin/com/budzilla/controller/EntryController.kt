@@ -1,10 +1,13 @@
 package com.budzilla.controller
 
 import com.budzilla.auth.UserPrincipal
+import com.budzilla.common.Metrics
+import com.budzilla.context.Context
 import com.budzilla.data.repository.EntryRepository
 import com.budzilla.dto.EntryDTO
 import com.budzilla.model.Entry
 import com.budzilla.model.User
+import io.micrometer.core.annotation.Timed
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.context.SecurityContextHolder
@@ -15,32 +18,39 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/entry")
 class EntryController
     (
-    val entryRepository: EntryRepository
+    val entryRepository: EntryRepository,
+    val context: Context,
+    val metrics: Metrics
 ) {
     @GetMapping("/all")
+    @Timed("entry.all")
     fun getAll() : ResponseEntity<List<EntryDTO>> {
-        val entries = entryRepository.findAll()
+        val entries = entryRepository.findByUserId(context.getUserId())
         val entryDTOs = entries.map {
             EntryDTO(it.user.id,
                 it.title, it.parent,
                 it.category, it.body)
         }.toList()
+
         return ResponseEntity.ok().body(entryDTOs)
     }
     @PostMapping
+    @Timed("entry.create")
     fun create(@RequestBody dto: EntryDTO) : ResponseEntity<EntryDTO> {
-        val user = user()
+        val user = context.getUser()
         val entry = Entry(title = dto.title, body = dto.body,
             parent = dto.parent, category = dto.category,
             user = user)
         entryRepository.save(entry)
+        metrics.newEntryCreated.increment()
         return ResponseEntity.ok().body(dto)
     }
     @PutMapping("/{id}")
+    @Timed("entry.update")
     fun update(@PathVariable id : Long, @RequestBody dto : EntryDTO) : ResponseEntity<EntryDTO> {
         val entry = entryRepository.findById(id)
-        if (entry.isPresent) {
-            val user = user()
+        if (entry.isPresent && entry.get().user.id == context.getUserId()) {
+            val user = context.getUser()
             val e = entry.get()
             e.title = dto.title
             e.body = dto.body
@@ -52,11 +62,5 @@ class EntryController
         } else {
             throw ResponseStatusException(HttpStatus.NOT_FOUND, "entry $id does not exist")
         }
-    }
-
-    private fun user(): User {
-        val auth = SecurityContextHolder.getContext().authentication
-        val user = (auth.principal as UserPrincipal).user
-        return user
     }
 }

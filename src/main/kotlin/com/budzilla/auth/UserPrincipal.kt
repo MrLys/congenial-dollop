@@ -1,15 +1,20 @@
 package com.budzilla.auth
 
+import com.budzilla.model.Role
 import com.budzilla.model.User
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 class UserPrincipal(
-    val user: User
+    val user: User,
+    roles: List<Role>
 ) : UserDetails {
+    private val authorities: MutableCollection<out GrantedAuthority>  = roles.stream().map { role ->
+        SimpleGrantedAuthority(role.name)
+    }.toList().toMutableList()
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        return mutableListOf(SimpleGrantedAuthority("ADMIN"), SimpleGrantedAuthority("ROLE_VIEWER"))
+        return authorities
     }
 
     override fun getPassword(): String {

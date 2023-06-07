@@ -8,9 +8,9 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 @SpringBootApplication
-@ComponentScan("com.budzilla.auth", "com.budzilla.controller", "com.budzilla")
-@EnableJpaRepositories(basePackages = ["com.budzilla.data.repository"])
-@EntityScan("com.budzilla.model")
+@ComponentScan("com.budzilla.auth", "com.budzilla.controller", "com.budzilla", "com.budzilla.brian")
+@EnableJpaRepositories(basePackages = ["com.budzilla.data.repository", "com.budzilla.brian.data.repository"])
+@EntityScan("com.budzilla.model", "com.budzilla.brian.model")
 @EnableConfigurationProperties
 class BudzillaApplication
 
