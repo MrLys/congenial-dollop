@@ -25,6 +25,7 @@ class EntryController
     @GetMapping("/all")
     @Timed("entry.all")
     fun getAll() : ResponseEntity<List<EntryDTO>> {
+        println(context.getUserId())
         val entries = entryRepository.findByUserId(context.getUserId())
         val entryDTOs = entries.map {
             EntryDTO(it.user.id,
