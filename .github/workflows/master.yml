@@ -20,7 +20,8 @@ jobs:
         distribution: 'temurin'
 
     - name: Configure JDK 17 as default
-      run: sudo update-alternatives --set java /usr/lib/jvm/adoptopenjdk-17-hotspot-amd64/bin/java
+      run: sudo update-alternatives --set java /usr/lib/jvm/temurin-17-hotspot-amd64/bin/java
+
 
     - name: Cache Gradle dependencies
       uses: actions/cache@v2
