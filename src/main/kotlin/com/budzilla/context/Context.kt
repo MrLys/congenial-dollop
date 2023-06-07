@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component
 
 @Component
 class Context {
-    public fun getUser(): User {
+    fun getUser(): User {
         val auth = SecurityContextHolder.getContext().authentication
         return (auth.principal as UserPrincipal).user
     }
-    public fun getUserId(): Long {
+    fun getUserId(): Long {
         return getUser().id!!
     }
 }
