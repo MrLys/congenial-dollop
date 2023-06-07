@@ -70,7 +70,9 @@ class SecurityConfig(
 
     @Bean
     fun filterChain(http : HttpSecurity) : SecurityFilterChain {
-        http.csrf().disable()
+        http.cors()
+            .and()
+            .csrf().disable()
             .exceptionHandling().authenticationEntryPoint(EntryPoint())
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -85,8 +87,10 @@ class SecurityConfig(
     @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
-        configuration.allowedOrigins = listOf(corsAllowedOrigins)
+        val originsAsList = corsAllowedOrigins.split(",")
+        configuration.allowedOrigins = originsAsList
         configuration.allowedMethods = listOf("GET", "POST", "PUT", "OPTIONS", "DELETE")
+        configuration.allowedHeaders = listOf("*")
         configuration.allowCredentials = true
         val source = UrlBasedCorsConfigurationSource()
         source.registerCorsConfiguration("/**", configuration)
