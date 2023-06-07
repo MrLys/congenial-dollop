@@ -56,7 +56,7 @@ class SecurityConfig(
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-            .mvcMatchers("/actuator/**").hasRole(Role.METRICS.name)
+            .mvcMatchers("/actuator/**").hasAuthority(Role.METRICS.name)
             .and()
             .authorizeRequests().antMatchers("/api/auth/**").permitAll()
             .and()
