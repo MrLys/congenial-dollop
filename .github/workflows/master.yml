@@ -42,7 +42,7 @@ jobs:
         sudo chmod +x /usr/local/bin/docker-compose
 
     - name: Start Database
-      run: docker compose up docker-compose-dev.yml -d
+      run: docker compose -f docker-compose-dev.yml up -d
 
     - name: Build with Gradle
       run: ./gradlew build
