@@ -1,6 +1,7 @@
 package com.budzilla.brian.model
 
 import com.budzilla.model.User
+import org.hibernate.annotations.Type
 import javax.persistence.*
 
 @Entity
@@ -11,6 +12,7 @@ class Deck (
     @Column(length = 1024, unique = true)
     var title : String,
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     var description: String,
     @Column
     var category : DeckType,
