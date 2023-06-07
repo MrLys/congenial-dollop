@@ -64,7 +64,7 @@ class SecurityConfig(
             .anyRequest()
             .authenticated()
 
-            http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter::class.java)
+        http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter::class.java)
         http.addFilterBefore(requestFilter, JwtTokenFilter::class.java)
         return http.build()
     }
