@@ -7,5 +7,4 @@ enum class DeckType (
     Commander(1, "Commander"),
     Standard(2, "Standard"),
     Library(3, "Library")
-
 }
