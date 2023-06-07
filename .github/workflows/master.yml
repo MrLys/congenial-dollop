@@ -29,6 +29,19 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
 
+    - name: Install Docker
+      run: |
+        sudo apt-get update
+        sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+    - name: Docker Compose
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+
+    - name: Start Database
+      run: docker compose up docker-compose-dev.yml -d
+
     - name: Build with Gradle
       run: ./gradlew build
 
@@ -48,9 +61,6 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-
-    - name: Configure JDK 17 as default
-      run: sudo update-alternatives --set java /usr/lib/jvm/adoptopenjdk-17-hotspot-amd64/bin/java
 
     - name: Cache Gradle dependencies
       uses: actions/cache@v2
