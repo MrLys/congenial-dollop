@@ -1,0 +1,84 @@
+name: Build, Test, and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Configure JDK 17 as default
+      run: sudo update-alternatives --set java /usr/lib/jvm/adoptopenjdk-17-hotspot-amd64/bin/java
+
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    - name: Build with Gradle
+      run: ./gradlew build
+
+    - name: Test with Gradle
+      run: ./gradlew test
+           
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Configure JDK 17 as default
+      run: sudo update-alternatives --set java /usr/lib/jvm/adoptopenjdk-17-hotspot-amd64/bin/java
+
+    - name: Cache Gradle dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+      with:
+        access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Build and Push Docker Image
+      run: |
+        VERSION=$(echo "1.0.${{ github.run_number }}")
+        REPOSITORY=628406611447.dkr.ecr.eu-north-1.amazonaws.com/budzilla
+        ./gradlew bootjar
+        docker build -t $VERSION .
+        docker tag $VERSION $REPOSITORY:$VERSION
+        docker tag $VERSION $REPOSITORY:latest
+        docker push $REPOSITORY:$VERSION
+        docker push $REPOSITORY:latest
