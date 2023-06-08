@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Configuration
 class JwtConfiguration(
     @Value("\${budzilla.jwt.secret}")
     val jwtSecret : String,
+    @Value("\${budzilla.longlived.jwt.secret}")
+    val longLivedjwtSecret : String,
     @Value("\${budzilla.jwt.expiration}")
     val jwtExpiration : Long,
     @Value("\${budzilla.jwt.format}")
