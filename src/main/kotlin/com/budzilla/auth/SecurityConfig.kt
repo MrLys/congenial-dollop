@@ -29,7 +29,9 @@ import java.util.*
 class SecurityConfig(
     val jwtTokenFilter: JwtTokenFilter,
     val requestFilter: RequestFilter,
+    val longLivedTokenAuthenticationFilter: LongLivedTokenAuthenticationFilter,
     val entryPoint: EntryPoint,
+    val accessDenied: AccessDenied,
     @Value("\${budzilla.cors.allowed_origins}")
     val corsAllowedOrigins: String,
 )  {
@@ -51,9 +53,14 @@ class SecurityConfig(
         http.cors()
             .and()
             .csrf().disable()
-            .exceptionHandling().authenticationEntryPoint(entryPoint)
+            .exceptionHandling()
+            .authenticationEntryPoint(entryPoint)
+            .accessDeniedHandler(accessDenied)
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authorizeRequests()
+            .mvcMatchers("/admin/**").hasAuthority(Role.ADMIN.name)
             .and()
             .authorizeRequests()
             .mvcMatchers("/actuator/**").hasAuthority(Role.METRICS.name)
@@ -65,7 +72,8 @@ class SecurityConfig(
             .authenticated()
 
         http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter::class.java)
-        http.addFilterBefore(requestFilter, JwtTokenFilter::class.java)
+        http.addFilterBefore(longLivedTokenAuthenticationFilter, JwtTokenFilter::class.java)
+        http.addFilterBefore(requestFilter, LongLivedTokenAuthenticationFilter::class.java)
         return http.build()
     }
     @Bean
