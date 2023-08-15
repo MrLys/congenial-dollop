@@ -32,7 +32,7 @@ class JwtService(private val jwtConfiguration: JwtConfiguration) {
     public fun generateLongLivedToken(identity: String): String {
         return Jwts.builder().setSubject(identity)
             .setIssuedAt(Date())
-            .setExpiration(getExpiryDateFromNow())
+            .setExpiration(getLongLivedExpiryDateFromNow())
             .signWith(longLivedKey, SignatureAlgorithm.HS512)
             .compact()
     }
