@@ -4,6 +4,7 @@ import com.budzilla.UserDTO
 import com.budzilla.auth.JwtResponse
 import com.budzilla.auth.JwtService
 import com.budzilla.auth.UserPrincipal
+import com.budzilla.auth.WhoAmIDTO
 import com.budzilla.context.Context
 import com.budzilla.data.repository.UserRepository
 import com.budzilla.data.repository.UserRoleRepository
@@ -17,10 +18,7 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.nio.file.AccessDeniedException
 
 @RestController
@@ -70,5 +68,13 @@ class UserController (
         val updatedUser = User(user.id!!, dto.username, passwordEncoder.encode(dto.password))
         userRepository.save(updatedUser)
         return ResponseEntity.noContent().build()
+    }
+
+    @GetMapping("/whoAmI")
+    @Timed("auth.whoAmI")
+    fun whoAmI(): ResponseEntity<WhoAmIDTO> {
+        val user = context.getUser()
+        val roles = userRoleRepository.findByUserId(user.id!!).map { it.role.name }.toList()
+        return ResponseEntity.ok().body(WhoAmIDTO(user.id!!, user.identity, roles))
     }
 }
