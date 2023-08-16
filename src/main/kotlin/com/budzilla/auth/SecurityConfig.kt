@@ -15,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository
+import org.springframework.security.web.session.HttpSessionEventPublisher
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -27,13 +29,13 @@ import java.util.*
     securedEnabled = true,
     jsr250Enabled = true)
 class SecurityConfig(
-    val jwtTokenFilter: JwtTokenFilter,
-    val requestFilter: RequestFilter,
-    val longLivedTokenAuthenticationFilter: LongLivedTokenAuthenticationFilter,
-    val entryPoint: EntryPoint,
-    val accessDenied: AccessDenied,
+    private val jwtTokenFilter: JwtTokenFilter,
+    private val requestFilter: RequestFilter,
+    private val longLivedTokenAuthenticationFilter: LongLivedTokenAuthenticationFilter,
+    private val entryPoint: EntryPoint,
+    private val accessDenied: AccessDenied,
     @Value("\${budzilla.cors.allowed_origins}")
-    val corsAllowedOrigins: String,
+    private val corsAllowedOrigins: String,
 )  {
     @Bean
     fun passwordEncoder() : PasswordEncoder {
@@ -77,6 +79,12 @@ class SecurityConfig(
         return http.build()
     }
     @Bean
+    fun mySecurityContextRepository() : HttpSessionSecurityContextRepository {
+        return HttpSessionSecurityContextRepository()
+    }
+
+
+    @Bean
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration()
         val originsAsList = corsAllowedOrigins.split(",")
@@ -88,5 +96,10 @@ class SecurityConfig(
         source.registerCorsConfiguration("/**", configuration)
         return source
     }
+    @Bean
+    fun httpSessionEventPublisher() : HttpSessionEventPublisher {
+        return HttpSessionEventPublisher()
+    }
+
 
 }

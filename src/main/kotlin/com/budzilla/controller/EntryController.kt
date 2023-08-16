@@ -18,9 +18,9 @@ import org.springframework.web.server.ResponseStatusException
 @RequestMapping("/entry")
 class EntryController
     (
-    val entryRepository: EntryRepository,
-    val context: Context,
-    val metrics: Metrics
+    private val entryRepository: EntryRepository,
+    private val context: Context,
+    private val metrics: Metrics
 ) {
     @GetMapping("/all")
     @Timed("entry.all")
