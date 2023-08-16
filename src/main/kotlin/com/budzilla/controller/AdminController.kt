@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/admin")
 class AdminController(
-    val userRepository: UserRepository,
-    val context: Context,
-    val jwtService: JwtService
+    private val userRepository: UserRepository,
+    private val context: Context,
+    private val jwtService: JwtService
     ) {
 
     @PostMapping("/newToken/{id}")

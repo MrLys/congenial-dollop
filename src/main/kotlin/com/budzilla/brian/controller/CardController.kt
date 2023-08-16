@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/card")
+@RequestMapping("/brian/card")
 class CardController (
-    val cardRepository: CardRepository,
-    val context: Context
+    private val cardRepository: CardRepository,
+    private val context: Context
 ) {
     @GetMapping("/all")
     @Timed("card.all")

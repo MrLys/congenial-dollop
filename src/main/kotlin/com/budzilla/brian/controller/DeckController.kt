@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/deck")
+@RequestMapping("/brian/deck")
 class DeckController (
-    cardRepository: CardRepository,
-    deckRepository: DeckRepository
+    private val cardRepository: CardRepository,
+    private val deckRepository: DeckRepository
 ){
 
 }
