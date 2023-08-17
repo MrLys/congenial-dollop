@@ -39,7 +39,7 @@ class JwtService(private val jwtConfiguration: JwtConfiguration) {
 
     private fun getLongLivedExpiryDateFromNow() : Date {
         val now = Date()
-        val expiry = now.time + 31536000;
+        val expiry = now.time + (31536000L * 1000);
         return Date(expiry)
     }
     private fun getExpiryDateFromNow() : Date {
