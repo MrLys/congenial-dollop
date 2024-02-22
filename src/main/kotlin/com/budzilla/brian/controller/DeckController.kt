@@ -107,7 +107,7 @@ class DeckController (
     }
 
     private fun importToCollection(cards: List<List<Card>>) {
-        val library = deckRepository.findByUserIdAndCategoryId(context.getUser().id!!, DeckType.Library.id) ?: Deck(title = "Library", description = "Library", category = DeckType.Library, user = context.getUser()).let { deckRepository.save(it) }
+        val library = deckRepository.findByUserIdAndCategoryId(context.getUser().id!!, DeckType.Library.ordinal.toLong()) ?: Deck(title = "Library", description = "Library", category = DeckType.Library, user = context.getUser()).let { deckRepository.save(it) }
         cards.forEach { duplicates ->
             val card = cardRepository.findByUserIdAndScryfallId(context.getUserId(), duplicates[0].scryfallId) ?: Card(scryfallData = duplicates[0].scryfallData, scryfallId = duplicates[0].scryfallId, title = duplicates[0].title, user = context.getUser()).let { cardRepository.save(it) }
             val deckRelations = deckRelationRepository.findByDeckIdAndUserIdAndCardId(
@@ -115,13 +115,16 @@ class DeckController (
                 context.getUserId(),
                 card.id!!
             )
+            println("deck relations: ${deckRelations.size}")
             if (deckRelations.size == duplicates.size) {
                 // we already have all the cards in the library
+                println("Already have all the cards in the library")
                 return
             } else {
-                (1..(deckRelations.size - duplicates.size)).forEach {
-                    val importedCard = Card(scryfallData = duplicates[0].scryfallData, scryfallId = duplicates[0].scryfallId, title = duplicates[0].title, user = context.getUser()).let { cardRepository.save(it) }
-                    DeckRelation(user = context.getUser(), deck = library, card = importedCard).let { deckRelationRepository.save(it) }
+                (0..(duplicates.size - deckRelations.size + 1)).forEach { i ->
+                    println(i)
+                    DeckRelation(user = context.getUser(), deck = library, card = card).let { deckRelationRepository.save(it) }
+                    println("Added card to library")
                 }
             }
         }

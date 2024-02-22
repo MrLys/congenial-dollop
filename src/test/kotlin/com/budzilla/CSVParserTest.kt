@@ -1,5 +1,6 @@
 package com.budzilla
 
+import com.budzilla.brian.model.DeckType
 import com.budzilla.brian.service.CSVParser
 import com.budzilla.data.repository.EntryRepository
 import com.budzilla.data.repository.UserRepository
@@ -31,7 +32,7 @@ class CSVParserTest {
         val username = UUID.randomUUID().toString()
         signupService.signup(username, "test")
         signInService.authenticate(username, "test")
-        val entries = cSVParser.parseCardsCSV2(File("collection.csv").inputStream())
+        val entries = cSVParser.parseCardsCSV(File("collection.csv").inputStream())
         entries.forEach { entryList ->
             entryList.forEach { entry ->
                 println("${entry.title}, ${entry.scryfallId}")
@@ -42,6 +43,10 @@ class CSVParserTest {
             userRoleRepository.delete(it)
         }
         userRepository.delete(user)
+    }
+    @Test
+    fun test() {
+        println(DeckType.Library.ordinal)
     }
 
 }
