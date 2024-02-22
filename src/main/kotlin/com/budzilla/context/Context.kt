@@ -2,6 +2,7 @@ package com.budzilla.context
 
 import com.budzilla.auth.UserPrincipal
 import com.budzilla.model.User
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 
@@ -13,5 +14,8 @@ class Context {
     }
     fun getUserId(): Long {
         return getUser().id!!
+    }
+    fun getAuth(): Authentication {
+        return SecurityContextHolder.getContext().authentication
     }
 }

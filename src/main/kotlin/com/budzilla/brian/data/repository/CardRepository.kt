@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface CardRepository : JpaRepository<Card, Long> {
     fun findByUserId(userId: Long): List<Card>
+    fun findByUserIdAndScryfallId(userId: Long, scryfallId: String): Card?
 }

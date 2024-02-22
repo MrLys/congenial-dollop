@@ -7,6 +7,7 @@ data class DeckDTO (
     val id : Long?,
     val title : String,
     val description: String,
-    val category : DeckType,
-    val ownerId: Long?
+    val category : DeckTypeDTO?,
+    val ownerId: Long?,
+    val cards: List<CardDTO>
 )

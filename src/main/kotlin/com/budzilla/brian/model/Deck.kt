@@ -11,11 +11,10 @@ class Deck (
     var id : Long?=null,
     @Column(length = 1024, unique = true)
     var title : String,
-    @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @Column(columnDefinition = "text")
     var description: String,
     @Column
-    var category : DeckType,
+    var category : DeckType?,
     @ManyToOne
     @JoinColumn(name = "ownerid", nullable = false)
     var user: User

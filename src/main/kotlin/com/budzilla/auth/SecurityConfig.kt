@@ -69,6 +69,8 @@ class SecurityConfig(
             .and()
             .authorizeRequests().antMatchers("/api/auth/**").permitAll()
             .and()
+            .authorizeRequests().antMatchers("/api/brian/category/**").permitAll()
+            .and()
             .authorizeRequests()
             .anyRequest()
             .authenticated()

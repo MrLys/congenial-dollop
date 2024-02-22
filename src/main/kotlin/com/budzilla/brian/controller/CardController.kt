@@ -22,7 +22,7 @@ class CardController (
     fun getAll() : ResponseEntity<List<CardDTO>> {
         val entries = cardRepository.findByUserId(context.getUserId())
         val cardDTOs = entries.map {
-            CardDTO(it.id, it.scryfallData, it.user.id!!)
+            CardDTO(it.id, title = it.title, it.scryfallData, scryfallId =it.scryfallId, it.user.id!!)
         }.toList()
         return ResponseEntity.ok().body(cardDTOs)
     }

@@ -16,5 +16,5 @@ class DeckRelation(
     var deck: Deck,
     @ManyToOne
     @JoinColumn(name = "cardId", nullable = false)
-    var card: Card,
+    var card: Card
 )

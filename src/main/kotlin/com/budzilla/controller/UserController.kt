@@ -8,6 +8,8 @@ import com.budzilla.data.repository.UserRoleRepository
 import com.budzilla.model.Role
 import com.budzilla.model.User
 import com.budzilla.model.UserRole
+import com.budzilla.service.SignInService
+import com.budzilla.service.SignupService
 import io.micrometer.core.annotation.Timed
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
@@ -33,6 +35,8 @@ class UserController (
     private val signupSecret : String,
     private val sessionCookieService: SessionCookieService,
     private val context: Context,
+    private val signupService: SignupService,
+    private val signInService: SignInService
 ) {
 
     @PostMapping("/auth/signup")
@@ -41,16 +45,15 @@ class UserController (
         if (dto.secret == null || dto.secret != signupSecret) {
             throw AccessDeniedException("Invalid secret");
         }
-        if (userRepository.existsByIdentity(dto.username)) {
+        if (!signupService.validUsername(dto.username))  {
             return ResponseEntity
                 .badRequest()
                 .body("Error: Username is already in use")
         }
-        val user = User(identity = dto.username, encodedPassword = passwordEncoder.encode(dto.password))
-        userRepository.save(user)
-        userRoleRepository.save(UserRole(user = user, role = Role.USER))
+        signupService.signup(dto.username, dto.password)
         return ResponseEntity.noContent().build()
     }
+
     @PostMapping("/auth/login")
     @Timed("auth.login")
     fun login(@RequestBody dto : UserDTO) : ResponseEntity<JwtResponse> {
@@ -62,13 +65,12 @@ class UserController (
         val roles = userRoleRepository.findByUserId(user.id!!).map { it.role.name }.toList()
         return ResponseEntity.ok().body(JwtResponse(jwt, user.id!!, user.identity, roles))
     }
+
     @PostMapping("/auth/webLogin")
     @Timed("auth.webLogin")
     fun webLogin(@RequestBody dto : UserDTO, response: HttpServletResponse, request: HttpServletRequest) : ResponseEntity<Any> {
-        val auth = authenticationManager.authenticate(
-            UsernamePasswordAuthenticationToken(dto.username, dto.password))
-        SecurityContextHolder.getContext().authentication = auth
-        sessionCookieService.setupSessionToken(auth, request, response)
+        signInService.authenticate(dto.username, dto.password)
+        sessionCookieService.setupSessionToken(context.getAuth(), request, response)
         return ResponseEntity.noContent().build()
     }
     @PostMapping("/update")
